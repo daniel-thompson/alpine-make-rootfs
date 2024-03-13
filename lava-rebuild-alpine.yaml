@@ -1,0 +1,9 @@
+metadata:
+  name: lava-rebuild-alpine
+  format: "Lava-Test-Shell Test Definition 1.0"
+  description: "Rebuild an alpine rootfs (using an alpine rootfs)"
+  version: 1.0
+
+run:
+  steps:
+    - './lava-rebuild-alpine.sh || lava-test-raise "Failed to rebuild alpine!"'
