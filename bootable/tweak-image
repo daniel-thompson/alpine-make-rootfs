@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#
+# tweak-image
+#
+# Install script that adapts alpine-make-rootfs to generate
+# bootable images instead of container images.
+#
+
+set -x
+
+# Grab the base image (mostly this is the init sytem)
+apk add alpine-base
+
+# Add some boot services by default.
+#
+# For reference, a freshly installed apline 3.19 has the following
+# services enabled during setup-alpine:
+# ~~~
+# localhost:~# rc-update
+#                 acpid |      default
+#              bootmisc | boot
+#                 crond |      default
+#                 devfs |                                 sysinit
+#                 dmesg |                                 sysinit
+#              hostname | boot
+#             hwdrivers |                                 sysinit
+#             killprocs |                        shutdown
+#                  mdev |                                 sysinit
+#               modules | boot
+#              mount-ro |                        shutdown
+#            networking | boot
+#                  ntpd |      default
+#             savecache |                        shutdown
+#               seedrng | boot
+#                  swap | boot
+#               swclock | boot
+#                sysctl | boot
+#                syslog | boot
+# ~~~
+#
+# The following enables a minimal subset of the above.
+rc-update add bootmisc		boot
+rc-update add devfs					sysinit
+rc-update add dmesg					sysinit
+rc-update add hostname		boot
+rc-update add hwdrivers					sysinit
+rc-update add killprocs				shutdown
+rc-update add mdev					sysinit
+rc-update add modules		boot
+rc-update add mount-ro				shutdown
+rc-update add networking	boot
+rc-update add savecache				shutdown
+rc-update add syslog		boot
+
+# Simplify getty handling
+sed -i.orig \
+    -e s/^tty/#tty/ \
+    -e '/ttyS0/a \\n# Put a getty on the console\nconsole::respawn:/sbin/getty -L console 115200 vt100' /etc/inittab
+
+# Clear the root password
+passwd -d root
+
+# Apply the overlay
+tar -C overlay -cf - . | tar -C / -xvf -
