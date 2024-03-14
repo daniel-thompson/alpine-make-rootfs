@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #
-# lava-rebuild-apline.sh
+# lava-rebuild-alpine.sh
 #
-# Self-hosted image regeneration!
+# Self-hosted image regeneration! Needs to be run as root.
 #
 
 set -ex
