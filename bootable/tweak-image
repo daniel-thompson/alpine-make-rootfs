@@ -10,7 +10,7 @@
 set -x
 
 # Grab the base image (mostly this is the init sytem)
-apk add alpine-base
+apk add --no-interactive --no-progress alpine-base
 
 # Add some boot services by default.
 #
