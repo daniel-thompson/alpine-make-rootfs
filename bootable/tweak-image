@@ -58,6 +58,9 @@ sed -i.orig \
     -e s/^tty/#tty/ \
     -e '/ttyS0/a \\n# Put a getty on the console\nconsole::respawn:/sbin/getty -L console 115200 vt100' /etc/inittab
 
+# Minimally populate of /dev
+mknod /dev/console c 5 1
+
 # Clear the root password
 passwd -d root
 
