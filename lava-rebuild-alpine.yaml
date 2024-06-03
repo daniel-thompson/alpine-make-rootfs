@@ -4,6 +4,9 @@ metadata:
   description: "Rebuild an alpine rootfs (using an alpine rootfs)"
   version: 1.0
 
+params:
+  EXTRA_PACKAGES: ""
+
 run:
   steps:
-    - './lava-rebuild-alpine.sh || lava-test-raise "Failed to rebuild alpine!"'
+    - EXTRA_PACKAGES=${EXTRA_PACKAGES} lava-test-case lava-rebuild-alpine --shell ./lava-rebuild-alpine.sh

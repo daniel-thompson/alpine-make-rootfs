@@ -12,7 +12,10 @@ set -ex
 apk add --no-interactive --no-progress e2fsprogs zstd
 
 # Rebuild the rootfs
-./alpine-make-rootfs alpine-base-latest.tar --script-chroot bootable/tweak-image
+./alpine-make-rootfs \
+	alpine-base-latest.tar \
+	--script-chroot bootable/tweak-image \
+	--packages "$EXTRA_PACKAGES"
 zstd -19 --no-progress --force alpine-base-latest.tar
 
 # Package the rootfs as an ext4 filesystem
